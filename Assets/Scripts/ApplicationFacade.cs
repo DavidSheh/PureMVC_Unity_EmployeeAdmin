@@ -71,8 +71,8 @@ namespace Demo.PureMVC.EmployeeAdmin
         {
             base.InitializeController();
             RegisterCommand(NotiConst.STARTUP, typeof(StartupCommand));
-            //RegisterCommand(DELETE_USER, typeof(DeleteUserCommand));
-            //RegisterCommand(ADD_ROLE_RESULT, typeof(AddRoleResultCommand));
+            RegisterCommand(NotiConst.DELETE_USER, typeof(DeleteUserCommand));
+            RegisterCommand(NotiConst.ADD_ROLE_RESULT, typeof(AddRoleResultCommand));
         }
 
         #endregion

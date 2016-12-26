@@ -26,7 +26,6 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         public Action SelectUser;//选择用户事件
 
         public UserVO SelectedUserData;//列表中选择好的用户
-        private IList<UserVO> m_currentUsers;//当前选择的用户
 
         void Start()
         {
@@ -36,13 +35,6 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
             btnNew.onClick.AddListener(BtnNewClick);
 
             UpdateDeleteBtn();
-
-            //var list = new List<UserVO>();
-            //list.Add(new UserVO());
-            //list.Add(new UserVO());
-            //list.Add(new UserVO());
-            //list.Add(new UserVO());
-            //LoadUsers(list);
         }
 
         /// <summary>
@@ -51,7 +43,6 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         /// <param name="list"></param>
         public void LoadUsers(IList<UserVO> list)
         {
-            m_currentUsers = list;
             RefreshUI(list);
         }
         
