@@ -21,9 +21,9 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         public UserItem itemTemplete;
         List<UserItem> itemList = new List<UserItem>();//Item临时缓存列表
 
-        public Action NewUser;//添加用户事件
-        public Action DeleteUser;//删除用户事件
-        public Action SelectUser;//选择用户事件
+        public Action OnUserNew;// 新建用户事件
+        public Action OnUserDelete;// 删除用户事件
+        public Action OnUserSelect;// 选择用户事件
 
         public UserVO SelectedUserData;//列表中选择好的用户
 
@@ -34,7 +34,7 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
             btnDelete.onClick.AddListener(BtnDeleteClick);
             btnNew.onClick.AddListener(BtnNewClick);
 
-            UpdateDeleteBtn();
+            UpdateButtons();
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         void BtnDeleteClick()
         {
             Debug.Log("BtnDeleteClick");
-            if (null != DeleteUser)
+            if (null != OnUserDelete)
             {
-                DeleteUser();
+                OnUserDelete();
             }
         }
 
@@ -64,9 +64,9 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         void BtnNewClick()
         {
             Debug.Log("BtnNewClick");
-            if (null != NewUser)
+            if (null != OnUserNew)
             {
-                NewUser();
+                OnUserNew();
             }
         }
 
@@ -85,10 +85,10 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
 
             UserItem item = itemToggle.GetComponent<UserItem>();
             this.SelectedUserData = item.userData;
-            UpdateDeleteBtn();
-            if (null != SelectUser)
+            UpdateButtons();
+            if (null != OnUserSelect)
             {
-                SelectUser();
+                OnUserSelect();
             }
         }
 
@@ -99,7 +99,7 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         {
             toggleGroup.SetAllTogglesOff();
             this.SelectedUserData = null;
-            UpdateDeleteBtn();
+            UpdateButtons();
         }
 
         /// <summary>
@@ -160,9 +160,9 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         }
         
         /// <summary>
-        /// 更新删除按钮的状态
+        /// 更新按钮的状态
         /// </summary>
-        private void UpdateDeleteBtn()
+        private void UpdateButtons()
         {
             btnDelete.interactable = (SelectedUserData != null);
         }

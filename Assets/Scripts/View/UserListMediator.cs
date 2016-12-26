@@ -32,9 +32,9 @@ namespace Demo.PureMVC.EmployeeAdmin.View
                 : base(NAME, userList)
         {
             Debug.Log("UserListMediator()");
-            userList.NewUser += OnNewUser;
-            userList.DeleteUser += OnDeleteUser;
-            userList.SelectUser += OnSelectUser;
+            userList.OnUserNew += OnNewUser;
+            userList.OnUserDelete += OnDeleteUser;
+            userList.OnUserSelect += OnSelectUser;
         }
 
         public override void OnRegister()
