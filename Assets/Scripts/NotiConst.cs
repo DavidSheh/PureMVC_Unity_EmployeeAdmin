@@ -1,16 +1,20 @@
 ﻿public class NotiConst
 {
-    /// <summary>
-    /// Controller层消息通知
-    /// </summary>
-    public const string START_UP = "StartUp";                       //启动框架
-    public const string DISPATCH_MESSAGE = "DispatchMessage";       //派发信息
+    #region Notification name constants
 
-    /// <summary>
-    /// View层消息通知
-    /// </summary>
-    //public const string UPDATE_MESSAGE = "UpdateMessage";           //更新消息
-    //public const string UPDATE_EXTRACT = "UpdateExtract";           //更新解包
-    //public const string UPDATE_DOWNLOAD = "UpdateDownload";         //更新下载
-    //public const string UPDATE_PROGRESS = "UpdateProgress";         //更新进度
+    public const string STARTUP = "startup";
+
+    public const string NEW_USER = "newUser";
+    public const string DELETE_USER = "deleteUser";
+    public const string CANCEL_SELECTED = "cancelSelected";
+
+    public const string USER_SELECTED = "userSelected";
+    public const string USER_ADDED = "userAdded";
+    public const string USER_UPDATED = "userUpdated";
+    public const string USER_DELETED = "userDeleted";
+
+    public const string ADD_ROLE = "addRole";
+    public const string ADD_ROLE_RESULT = "addRoleResult";
+
+    #endregion
 }
