@@ -9,6 +9,9 @@ using System;
 using Demo.PureMVC.EmployeeAdmin.Model.VO;
 using Demo.PureMVC.EmployeeAdmin.Model.Enum;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 namespace Demo.PureMVC.EmployeeAdmin.View.Components
 {
@@ -23,235 +26,173 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
     /// </summary>
     public partial class UserForm : MonoBehaviour
     {
-        //public UserForm()
-        //{
-        //    //InitializeComponent();
-        //}
+        public Text txtUserName;
+        public InputField inputFirstName;
+        public InputField inputLastName;
+        public InputField inputEmail;
+        public InputField inputUserName;
+        public InputField inputPassword;
+        public InputField inputConfirmPassword;
+        public Dropdown dropdownDepartment;
+        public Button btnUpdateUser;
+        public Button btnCancel;
 
-        //#region Notification handling
+        public Action AddUser;
+        public Action UpdateUser;
+        public Action CancelUser;
 
-        //#region Clear form
+        //用户信息获取
+        public UserVO User
+        {
+            get { return m_user; }
+        }
+        private UserVO m_user;
 
-        //public void ClearForm()
-        //{
-        //    if (!CheckAccess())
-        //    {
-        //        Dispatcher.BeginInvoke(new ClearFormDelegate(ClearForm));
-        //        return;
-        //    }
+        //用户信息表单
+        public UserFormMode Mode
+        {
+            get { return m_mode; }
+        }
+        private UserFormMode m_mode = UserFormMode.ADD;
 
-        //    m_user = null;
-        //    formGrid.DataContext = null;
-        //    firstName.Text = lastName.Text = email.Text = userName.Text = "";
-        //    password.Password = confirmPassword.Password = "";
-        //    department.SelectedItem = DeptEnum.NONE_SELECTED;
-        //    UpdateButtons();
-        //}
-        //private delegate void ClearFormDelegate();
+        //开始
+        void Start()
+        {
+            //设置UI
+            btnUpdateUser.onClick.AddListener(BtnUpdateUserClick);
+            btnCancel.onClick.AddListener(BtnCancelClick);
 
-        //#endregion
+            inputUserName.onValueChanged.AddListener(OnInputChanged);
+            inputPassword.onValueChanged.AddListener(OnInputChanged);
+            inputConfirmPassword.onValueChanged.AddListener(OnInputChanged);
 
-        //#region Show user
+            List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
+            var deptList = DeptEnum.ComboList;
+            for (int i = 0; i < deptList.Count; i++)
+            {
+                Dropdown.OptionData data = new Dropdown.OptionData(deptList[i].Value);
+                options.Add(data);
+            }
+            dropdownDepartment.AddOptions(options);
 
-        //public void ShowUser(UserVO user, UserFormMode mode)
-        //{
-        //    if (!CheckAccess())
-        //    {
-        //        Dispatcher.BeginInvoke(new ShowUserDelegate(ShowUser), new object[] { user, mode });
-        //        return;
-        //    }
+            InteractiveInput(false);
+            UpdateButtons();
+        }
 
-        //    m_mode = mode;
+        /// <summary>
+        /// 清空用户信息
+        /// </summary>
+        public void ClearForm()
+        {
+            m_user = null;
+            txtUserName.text = "";
+            inputFirstName.text = inputLastName.text = inputEmail.text = inputUserName.text = "";
+            inputPassword.text = inputConfirmPassword.text = "";
+            dropdownDepartment.value = 0;
 
-        //    if (user == null)
-        //    {
-        //        ClearForm();
-        //    }
-        //    else
-        //    {
-        //        m_user = user;
-        //        formGrid.DataContext = user;
-        //        firstName.Text = user.FirstName;
-        //        lastName.Text = user.LastName;
-        //        email.Text = user.Email;
-        //        userName.Text = user.UserName;
-        //        password.Password = confirmPassword.Password = user != null ? user.Password : "";
-        //        department.SelectedItem = user.Department;
-        //        firstName.Focus();
-        //        UpdateButtons();
-        //    }
-        //}
-        //private delegate void ShowUserDelegate(UserVO user, UserFormMode mode);
+            InteractiveInput(false);
 
-        //#endregion
+            UpdateButtons();
+        }
 
-        //#endregion
+        /// <summary>
+        /// 显示当前用户信息
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="mode"></param>
+        public void ShowUser(UserVO user, UserFormMode mode)
+        {
+            m_mode = mode;
+            if (user == null)
+            {
+                ClearForm();
+            }
+            else
+            {
+                InteractiveInput(true);
+                m_user = user;
+                txtUserName.text = user.UserName;
+                inputFirstName.text = user.FirstName;
+                inputLastName.text = user.LastName;
+                inputEmail.text = user.Email;
+                inputUserName.text = user.UserName;
+                inputPassword.text = inputConfirmPassword.text = user != null ? user.Password : "";
+                dropdownDepartment.value = user.Department.Ordinal + 1;
+                EventSystem.current.SetSelectedGameObject(inputFirstName.gameObject);
+                inputFirstName.caretPosition = inputFirstName.text.Length - 1;
+                UpdateButtons();
+            }
+        }
 
-        //#region Events
+        /// <summary>
+        /// 启用/禁用用户输入
+        /// </summary>
+        /// <param name="interactable"></param>
+        private void InteractiveInput(bool interactable)
+        {
+            inputFirstName.interactable = inputLastName.interactable = inputEmail.interactable = interactable;
+            inputUserName.interactable = inputPassword.interactable = inputConfirmPassword.interactable = interactable;
+            dropdownDepartment.interactable = interactable;
+        }
 
-        //#region Request add user
+        /// <summary>
+        /// 更新按钮状态
+        /// </summary>
+        private void UpdateButtons()
+        {
+            if (btnUpdateUser != null)
+            {
+                btnUpdateUser.interactable = (inputFirstName.text.Length > 0 && inputPassword.text.Length > 0 && inputPassword.text.Equals(inputConfirmPassword.text));
+            }
+        }
+        
+        /// <summary>
+        /// 更新用户数据按钮点击调用
+        /// </summary>
+        void BtnUpdateUserClick()
+        {
+            m_user = new UserVO(
+                inputUserName.text, inputFirstName.text,
+                inputLastName.text, inputEmail.text,
+                inputPassword.text, new DeptEnum(dropdownDepartment.captionText.text, dropdownDepartment.value -1));
 
-        ///// <summary>
-        ///// The add user event
-        ///// </summary>
-        //public event EventHandler AddUser;
+            if (m_user.IsValid)
+            {
+                if (m_mode == UserFormMode.ADD)
+                {
+                    if (null != AddUser)
+                    {
+                        AddUser();
+                    }
+                }
+                else
+                {
+                    if (null != UpdateUser)
+                    {
+                        UpdateUser();
+                    }
+                }
+            }
+        }
 
-        ///// <summary>
-        ///// Fires the add user event
-        ///// </summary>
-        ///// <param name="args">The arguments for the event</param>
-        //protected virtual void OnAddUser(EventArgs args)
-        //{
-        //    if (AddUser != null)
-        //        AddUser(this, args);
-        //}
+        /// <summary>
+        /// 取消按钮点击回调
+        /// </summary>
+        void BtnCancelClick()
+        {
+            if (null != CancelUser)
+            {
+                CancelUser();
+            }
+        }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //protected virtual void SetAddUser()
-        //{
-        //    OnAddUser(new EventArgs());
-        //}
-
-        //#endregion
-
-        //#region Request update user
-
-        ///// <summary>
-        ///// The update user event
-        ///// </summary>
-        //public event EventHandler UpdateUser;
-
-        ///// <summary>
-        ///// Fires the update user event
-        ///// </summary>
-        ///// <param name="args">The arguments for the event</param>
-        //protected virtual void OnUpdateUser(EventArgs args)
-        //{
-        //    if (UpdateUser != null)
-        //        UpdateUser(this, args);
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //protected virtual void SetUpdateUser()
-        //{
-        //    OnUpdateUser(new EventArgs());
-        //}
-
-        //#endregion
-
-        //#region Request cancel user
-
-        ///// <summary>
-        ///// The cancel user event
-        ///// </summary>
-        //public event EventHandler CancelUser;
-
-        ///// <summary>
-        ///// Fires the cancel user event
-        ///// </summary>
-        ///// <param name="args">The arguments for the event</param>
-        //protected virtual void OnCancelUser(EventArgs args)
-        //{
-        //    if (CancelUser != null)
-        //        CancelUser(this, args);
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //protected virtual void SetCancelUser()
-        //{
-        //    OnCancelUser(new EventArgs());
-        //}
-
-        //#endregion
-
-        //#endregion
-
-        //#region Properties
-
-        //public UserVO User
-        //{
-        //    get { return m_user; }
-        //}
-        //private UserVO m_user;
-
-        //public UserFormMode Mode
-        //{
-        //    get { return m_mode; }
-        //}
-        //private UserFormMode m_mode = UserFormMode.ADD;
-
-        //#endregion
-
-        //#region Button updating
-
-        //private void UpdateButtons()
-        //{
-        //    IsEnabled = (m_user != null);
-
-        //    if (bUpdate != null)
-        //    {
-        //        bUpdate.IsEnabled = (userName.Text.Length > 0 && password.Password.Length > 0 && password.Password.Equals(confirmPassword.Password) &&
-        //            department.SelectedItem != null && department.SelectedItem != DeptEnum.NONE_SELECTED);
-        //    }
-        //}
-
-        //#endregion
-
-        //#region Event handling
-
-        //private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    UpdateButtons();
-        //}
-
-        //private void bUpdate_Click(object sender, RoutedEventArgs e)
-        //{
-        //    m_user = new UserVO(userName.Text, firstName.Text, lastName.Text, email.Text, password.Password, (DeptEnum)department.SelectedItem);
-
-        //    if (m_user.IsValid)
-        //    {
-        //        if (m_mode == UserFormMode.ADD)
-        //        {
-        //            SetAddUser();
-        //        }
-        //        else
-        //        {
-        //            SetUpdateUser();
-        //        }
-        //    }
-        //}
-
-        //private void bCancel_Click(object sender, RoutedEventArgs e)
-        //{
-        //    SetCancelUser();
-        //}
-
-        //private void department_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    UpdateButtons();
-        //}
-
-        //private void confirmPassword_PasswordChanged(object sender, RoutedEventArgs e)
-        //{
-        //    UpdateButtons();
-        //}
-
-        //private void password_PasswordChanged(object sender, RoutedEventArgs e)
-        //{
-        //    UpdateButtons();
-        //}
-
-        //private void userName_TextChanged(object sender, TextChangedEventArgs e)
-        //{
-        //    UpdateButtons();
-        //}
-
-        //#endregion
+        /// <summary>
+        /// 输入变更回调
+        /// </summary>
+        /// <param name="value"></param>
+        void OnInputChanged(string value)
+        {
+            UpdateButtons();
+        }
     }
 }

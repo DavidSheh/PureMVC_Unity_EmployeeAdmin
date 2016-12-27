@@ -25,9 +25,9 @@ namespace Demo.PureMVC.EmployeeAdmin.View
         public UserFormMediator(UserForm viewComponent)
             : base(NAME, viewComponent)
         {
-            //UserForm.AddUser += new EventHandler(UserForm_AddUser);
-            //UserForm.UpdateUser += new EventHandler(UserForm_UpdateUser);
-            //UserForm.CancelUser += new EventHandler(UserForm_CancelUser);
+            UserForm.AddUser += UserForm_AddUser;
+            UserForm.UpdateUser += UserForm_UpdateUser;
+            UserForm.CancelUser += UserForm_CancelUser;
         }
 
         public override void OnRegister()
@@ -41,26 +41,26 @@ namespace Demo.PureMVC.EmployeeAdmin.View
             get { return (UserForm)ViewComponent; }
         }
 
-        void UserForm_AddUser(object sender, EventArgs e)
+        void UserForm_AddUser()
         {
-            //UserVO user = UserForm.User;
-            //userProxy.AddItem(user);
-            //SendNotification(ApplicationFacade.USER_ADDED, user);
-            //UserForm.ClearForm();
+            UserVO user = UserForm.User;
+            userProxy.AddItem(user);
+            SendNotification(NotiConst.USER_ADDED, user);
+            UserForm.ClearForm();
         }
 
-        void UserForm_UpdateUser(object sender, EventArgs e)
+        void UserForm_UpdateUser()
         {
-            //UserVO user = UserForm.User;
-            //userProxy.UpdateItem(user);
-            //SendNotification(ApplicationFacade.USER_UPDATED, user);
-            //UserForm.ClearForm();
+            UserVO user = UserForm.User;
+            userProxy.UpdateItem(user);
+            SendNotification(NotiConst.USER_UPDATED, user);
+            UserForm.ClearForm();
         }
 
-        void UserForm_CancelUser(object sender, EventArgs e)
+        void UserForm_CancelUser()
         {
             SendNotification(NotiConst.CANCEL_SELECTED);
-            //UserForm.ClearForm();
+            UserForm.ClearForm();
         }
 
         public override IList<string> ListNotificationInterests()
@@ -80,18 +80,17 @@ namespace Demo.PureMVC.EmployeeAdmin.View
             {
                 case NotiConst.NEW_USER:
                     user = (UserVO)note.Body;
-                    //UserForm.ShowUser(user, UserFormMode.ADD);
+                    UserForm.ShowUser(user, UserFormMode.ADD);
                     break;
 
                 case NotiConst.USER_DELETED:
-                    //UserForm.ClearForm();
+                    UserForm.ClearForm();
                     break;
 
                 case NotiConst.USER_SELECTED:
                     user = (UserVO)note.Body;
-                    //UserForm.ShowUser(user, UserFormMode.EDIT);
+                    UserForm.ShowUser(user, UserFormMode.EDIT);
                     break;
-
             }
         }
     }

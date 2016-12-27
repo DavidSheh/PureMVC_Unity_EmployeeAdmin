@@ -23,18 +23,13 @@ namespace Demo.PureMVC.EmployeeAdmin.View
 
         public new const string NAME = "UserListMediator";
 
-        private UserList View
-        {
-            get { return (UserList)ViewComponent; }
-        }
-
         public UserListMediator(UserList userList)
                 : base(NAME, userList)
         {
             Debug.Log("UserListMediator()");
-            userList.OnUserNew += OnNewUser;
-            userList.OnUserDelete += OnDeleteUser;
-            userList.OnUserSelect += OnSelectUser;
+            userList.NewUser += userList_NewUser;
+            userList.DeleteUser += userList_DeleteUser;
+            userList.SelectUser += userList_SelectUser;
         }
 
         public override void OnRegister()
@@ -42,53 +37,49 @@ namespace Demo.PureMVC.EmployeeAdmin.View
             Debug.Log("UserListMediator.OnRegister()");
             base.OnRegister();
             userProxy = Facade.RetrieveProxy(UserProxy.NAME) as UserProxy;
-            View.LoadUsers(userProxy.Users);
+            UserList.LoadUsers(userProxy.Users);
         }
 
-        void OnNewUser()
+        private UserList UserList
+        {
+            get { return (UserList)ViewComponent; }
+        }
+
+        void userList_NewUser()
         {
             UserVO user = new UserVO();
             SendNotification(NotiConst.NEW_USER, user);
         }
 
-        void OnDeleteUser()
+        void userList_DeleteUser()
         {
-            SendNotification(NotiConst.DELETE_USER, View.SelectedUserData);
+            SendNotification(NotiConst.DELETE_USER, UserList.SelectedUserData);
         }
 
-        void OnSelectUser()
+        void userList_SelectUser()
         {
-            SendNotification(NotiConst.USER_SELECTED, View.SelectedUserData);
+            SendNotification(NotiConst.USER_SELECTED, UserList.SelectedUserData);
         }
 
         public override IList<string> ListNotificationInterests()
         {
             IList<string> list = new List<string>();
-            list.Add(NotiConst.USER_DELETED);
             list.Add(NotiConst.CANCEL_SELECTED);
-            list.Add(NotiConst.USER_ADDED);
             list.Add(NotiConst.USER_UPDATED);
             return list;
         }
 
-        public override void HandleNotification(INotification notification)
+        public override void HandleNotification(INotification note)
         {
-            switch (notification.Name)
+            switch (note.Name)
             {
-                case NotiConst.USER_DELETED:
-                    View.DeselectItem();
-                    View.LoadUsers(userProxy.Users);
-                    break;
                 case NotiConst.CANCEL_SELECTED:
-                    View.DeselectItem();
+                    UserList.Deselect();
                     break;
-                case NotiConst.USER_ADDED:
-                    View.DeselectItem();
-                    View.LoadUsers(userProxy.Users);
-                    break;
+
                 case NotiConst.USER_UPDATED:
-                    View.DeselectItem();
-                    View.LoadUsers(userProxy.Users);
+                    UserList.Deselect();
+                    UserList.LoadUsers(userProxy.Users);
                     break;
             }
         }

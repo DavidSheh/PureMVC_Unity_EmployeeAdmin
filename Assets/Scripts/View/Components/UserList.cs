@@ -21,9 +21,9 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         public UserItem itemTemplete;
         List<UserItem> itemList = new List<UserItem>();//Item临时缓存列表
 
-        public Action OnUserNew;// 新建用户事件
-        public Action OnUserDelete;// 删除用户事件
-        public Action OnUserSelect;// 选择用户事件
+        public Action NewUser;// 新建用户事件
+        public Action DeleteUser;// 删除用户事件
+        public Action SelectUser;// 选择用户事件
 
         public UserVO SelectedUserData;//列表中选择好的用户
 
@@ -43,7 +43,15 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         /// <param name="list"></param>
         public void LoadUsers(IList<UserVO> list)
         {
-            RefreshUI(list);
+            ClearItems();
+            foreach (var data in list)
+            {
+                UserItem item = CreateItem();
+                item.UpdateData(data);
+                itemList.Add(item);
+            }
+
+            SetUserCount(list.Count);
         }
         
         /// <summary>
@@ -52,9 +60,9 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         void BtnDeleteClick()
         {
             Debug.Log("BtnDeleteClick");
-            if (null != OnUserDelete)
+            if (null != DeleteUser)
             {
-                OnUserDelete();
+                DeleteUser();
             }
         }
 
@@ -64,9 +72,9 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         void BtnNewClick()
         {
             Debug.Log("BtnNewClick");
-            if (null != OnUserNew)
+            if (null != NewUser)
             {
-                OnUserNew();
+                NewUser();
             }
         }
 
@@ -86,37 +94,20 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
             UserItem item = itemToggle.GetComponent<UserItem>();
             this.SelectedUserData = item.userData;
             UpdateButtons();
-            if (null != OnUserSelect)
+            if (null != SelectUser)
             {
-                OnUserSelect();
+                SelectUser();
             }
         }
 
         /// <summary>
         /// 取消选择
         /// </summary>
-        public void DeselectItem()
+        public void Deselect()
         {
             toggleGroup.SetAllTogglesOff();
             this.SelectedUserData = null;
             UpdateButtons();
-        }
-
-        /// <summary>
-        /// 刷新UI
-        /// </summary>
-        /// <param name="datas"></param>
-        void RefreshUI(IList<UserVO> datas)
-        {
-            ClearItems();
-            foreach (var data in datas)
-            {
-                UserItem item = CreateItem();
-                item.UpdateData(data);
-                itemList.Add(item);
-            }
-
-            SetUserCount(datas.Count);
         }
 
         /// <summary>

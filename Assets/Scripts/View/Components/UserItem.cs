@@ -12,7 +12,10 @@ public class UserItem : MonoBehaviour {
     public Text txtEmail;//邮件
     public Text txtDepartment;//部门
 
-    //更新User信息
+    /// <summary>
+    /// 更新User信息
+    /// </summary>
+    /// <param name="data"></param>
     public void UpdateData(UserVO data)
     {
         this.userData = data;
