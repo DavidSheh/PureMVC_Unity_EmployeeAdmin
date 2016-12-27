@@ -19,7 +19,7 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         public Button btnNew;
         public Button btnDelete;
         public UserItem itemTemplete;
-        List<UserItem> itemList = new List<UserItem>();//Item临时缓存列表
+        List<GameObject> itemList = new List<GameObject>();//Item临时缓存列表
 
         public Action NewUser;// 新建用户事件
         public Action DeleteUser;// 删除用户事件
@@ -48,7 +48,7 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
             {
                 UserItem item = CreateItem();
                 item.UpdateData(data);
-                itemList.Add(item);
+                itemList.Add(item.gameObject);
             }
 
             SetUserCount(list.Count);
@@ -71,7 +71,6 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         /// </summary>
         void BtnNewClick()
         {
-            Debug.Log("BtnNewClick");
             if (null != NewUser)
             {
                 NewUser();
@@ -143,7 +142,7 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         {
             foreach (var item in itemList)
             {
-                Destroy(item.gameObject);
+                Destroy(item);
             }
 
             toggleGroup.Clear();

@@ -12,92 +12,98 @@ using PureMVC.Interfaces;
 
 using Demo.PureMVC.EmployeeAdmin.Model;
 using Demo.PureMVC.EmployeeAdmin.Model.VO;
+using Demo.PureMVC.EmployeeAdmin.View.Components;
 
 namespace Demo.PureMVC.EmployeeAdmin.View
 {
     public class RolePanelMediator : Mediator, IMediator
     {
-        //		private RoleProxy roleProxy;
+        private RoleProxy roleProxy;
 
-        //		public new const string NAME = "RolePanelMediator";
+        public new const string NAME = "RolePanelMediator";
 
         public RolePanelMediator(RolePanel viewComponent)
             : base(NAME, viewComponent)
         {
-            //RolePanel.AddRole += new EventHandler(RolePanel_AddRole);
-            //RolePanel.RemoveRole += new EventHandler(RolePanel_RemoveRole);
+            RolePanel.AddRole += RolePanel_AddRole;
+            RolePanel.RemoveRole += RolePanel_RemoveRole;
         }
 
-        //		public override void OnRegister()
-        //		{
-        //			base.OnRegister();
-        //			roleProxy = (RoleProxy) Facade.RetrieveProxy(RoleProxy.NAME);
-        //		}
+        public override void OnRegister()
+        {
+            base.OnRegister();
+            roleProxy = (RoleProxy)Facade.RetrieveProxy(RoleProxy.NAME);
+        }
 
-        //		private RolePanel RolePanel
-        //		{
-        //			get { return (RolePanel) ViewComponent; }
-        //		}
+        private RolePanel RolePanel
+        {
+            get { return (RolePanel)ViewComponent; }
+        }
 
-        //		void RolePanel_RemoveRole(object sender, EventArgs e)
-        //		{
-        //			roleProxy.RemoveRoleFromUser(RolePanel.User, RolePanel.SelectedRole);
-        //		}
+        void RolePanel_RemoveRole()
+        {
+            roleProxy.RemoveRoleFromUser(RolePanel.User, RolePanel.SelectedRole);
+        }
 
-        //		void RolePanel_AddRole(object sender, EventArgs e)
-        //		{
-        //			roleProxy.AddRoleToUser(RolePanel.User, RolePanel.SelectedRole);
-        //		}
+        void RolePanel_AddRole()
+        {
+            roleProxy.AddRoleToUser(RolePanel.User, RolePanel.RoleListSelectedRole);
+        }
 
-        //		public override IList<string> ListNotificationInterests()
-        //		{
-        //			IList<string> list = new List<string>();
-        //			list.Add(ApplicationFacade.NEW_USER);
-        //			list.Add(ApplicationFacade.USER_ADDED);
-        //			list.Add(ApplicationFacade.USER_DELETED);
-        //			list.Add(ApplicationFacade.CANCEL_SELECTED);
-        //			list.Add(ApplicationFacade.USER_SELECTED);
-        //			list.Add(ApplicationFacade.ADD_ROLE_RESULT);
-        //			return list;
-        //		}
+        public override IList<string> ListNotificationInterests()
+        {
+            IList<string> list = new List<string>();
+            list.Add(NotiConst.NEW_USER);
+            list.Add(NotiConst.USER_ADDED);
+            list.Add(NotiConst.USER_DELETED);
+            list.Add(NotiConst.CANCEL_SELECTED);
+            list.Add(NotiConst.USER_SELECTED);
+            list.Add(NotiConst.ADD_ROLE);
+            list.Add(NotiConst.DEL_ROLE);
+            return list;
+        }
 
-        //		public override void HandleNotification(INotification note)
-        //		{
-        //			UserVO user;
-        //			RoleVO role;
-        //			string userName;
+        public override void HandleNotification(INotification note)
+        {
+            UserVO user;
+            RoleVO role;
+            string userName;
 
-        //			switch (note.Name)
-        //			{
-        //				case ApplicationFacade.NEW_USER:
-        //					RolePanel.ClearForm();
-        //					break;
-        //				case ApplicationFacade.USER_ADDED:
-        //					user = (UserVO) note.Body;
-        //					userName = user == null ? "" : user.UserName;
-        //					role = new RoleVO(userName);
-        //					roleProxy.AddItem(role);
-        //					RolePanel.ClearForm();
-        //					break;
-        //				case ApplicationFacade.USER_UPDATED:
-        //					RolePanel.ClearForm();
-        //					break;
-        //				case ApplicationFacade.USER_DELETED:
-        //					RolePanel.ClearForm();
-        //					break;
-        //				case ApplicationFacade.CANCEL_SELECTED:
-        //					RolePanel.ClearForm();
-        //					break;
-        //				case ApplicationFacade.USER_SELECTED:
-        //					user = (UserVO) note.Body;
-        //					userName = user == null ? "" : user.UserName;
-        //					RolePanel.ShowUser(user, roleProxy.GetUserRoles(userName));
-        //					break;
-        //				case ApplicationFacade.ADD_ROLE_RESULT:
-        //					userName = RolePanel.User == null ? "" : RolePanel.User.UserName;
-        //					RolePanel.ShowUserRoles(roleProxy.GetUserRoles(userName));
-        //					break;
-        //			}
-        //		}
+            switch (note.Name)
+            {
+                case NotiConst.NEW_USER:
+                    RolePanel.ClearForm();
+                    break;
+                case NotiConst.USER_ADDED:
+                    user = (UserVO)note.Body;
+                    userName = user == null ? "" : user.UserName;
+                    role = new RoleVO(userName);
+                    roleProxy.AddItem(role);
+                    RolePanel.ClearForm();
+                    break;
+                case NotiConst.USER_UPDATED:
+                    RolePanel.ClearForm();
+                    break;
+                case NotiConst.USER_DELETED:
+                    RolePanel.ClearForm();
+                    break;
+                case NotiConst.CANCEL_SELECTED:
+                    RolePanel.ClearForm();
+                    break;
+                case NotiConst.USER_SELECTED:
+                    user = (UserVO)note.Body;
+                    userName = user == null ? "" : user.UserName;
+                    RolePanel.ShowUser(user, roleProxy.GetUserRoles(userName));
+                    break;
+                case NotiConst.ADD_ROLE:
+                    userName = RolePanel.User == null ? "" : RolePanel.User.UserName;
+                    RolePanel.ShowUserRoles(roleProxy.GetUserRoles(userName));
+                    break;
+                case NotiConst.DEL_ROLE:
+                    userName = RolePanel.User == null ? "" : RolePanel.User.UserName;
+                    RolePanel.ShowUserRoles(roleProxy.GetUserRoles(userName));
+                    break;
+            }
+        }
     }
 }

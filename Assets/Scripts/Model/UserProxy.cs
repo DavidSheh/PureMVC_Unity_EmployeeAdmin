@@ -22,7 +22,7 @@ namespace Demo.PureMVC.EmployeeAdmin.Model
 			: base(NAME, new List<UserVO>())
 		{
             // generate some test data	
-            AddItem(new UserVO("Sheh伟伟", "伟伟", "Sheh", "QQ群253999688", "sheh", DeptEnum.QC));
+            AddItem(new UserVO("Sheh伟伟", "伟伟", "Sheh", "QQ群253999688", "sheh", DeptEnum.SALES));
             AddItem(new UserVO("lstooge", "Larry", "Stooge", "larry@stooges.com", "ijk456", DeptEnum.ACCT));
 			AddItem(new UserVO("cstooge", "Curly", "Stooge", "curly@stooges.com", "xyz987", DeptEnum.SALES));
 			AddItem(new UserVO("mstooge", "Moe", "Stooge", "moe@stooges.com", "abc123", DeptEnum.PLANT));

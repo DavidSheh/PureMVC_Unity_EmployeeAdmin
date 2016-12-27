@@ -43,8 +43,7 @@ namespace Demo.PureMVC.EmployeeAdmin.Model.Enum
 				l.Add(ACCT);
 				l.Add(SALES);
 				l.Add(PLANT);
-                l.Add(SHIPPING);
-                l.Add(QC);
+
                 return l;
 			}
 		}

@@ -41,24 +41,26 @@ namespace Demo.PureMVC.EmployeeAdmin.View.Components
         public Action UpdateUser;
         public Action CancelUser;
 
-        //用户信息获取
+        /// <summary>
+        /// 用户数据
+        /// </summary>
         public UserVO User
         {
             get { return m_user; }
         }
         private UserVO m_user;
 
-        //用户信息表单
+        /// <summary>
+        /// 当前用户表单所处模式
+        /// </summary>
         public UserFormMode Mode
         {
             get { return m_mode; }
         }
         private UserFormMode m_mode = UserFormMode.ADD;
 
-        //开始
         void Start()
         {
-            //设置UI
             btnUpdateUser.onClick.AddListener(BtnUpdateUserClick);
             btnCancel.onClick.AddListener(BtnCancelClick);
 

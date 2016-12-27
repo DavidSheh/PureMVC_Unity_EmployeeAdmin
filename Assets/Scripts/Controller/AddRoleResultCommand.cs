@@ -16,7 +16,7 @@ namespace Demo.PureMVC.EmployeeAdmin.Controller
 			bool result = (bool) notification.Body;
 
 			if (!result) {
-				Debug.LogError("Role already exists for this user! Please Click Add User Role");
+				Debug.LogWarning("Role already exists for this user! Please Click Add User Role");
 			}
 		}
 	}

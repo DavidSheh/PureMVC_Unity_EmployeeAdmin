@@ -20,8 +20,11 @@ namespace Demo.PureMVC.EmployeeAdmin.Model
 		public RoleProxy()
 			: base(NAME, new List<RoleVO>())
 		{
-			// generate some test data 
-			AddItem(new RoleVO("lstooge",
+            // generate some test data
+            AddItem(new RoleVO("Sheh伟伟",
+                new RoleEnum[] { RoleEnum.ADMIN }));
+
+            AddItem(new RoleVO("lstooge",
 				new RoleEnum[] { RoleEnum.PAYROLL, RoleEnum.EMP_BENEFITS }));
 
 			AddItem(new RoleVO("cstooge",
@@ -117,7 +120,7 @@ namespace Demo.PureMVC.EmployeeAdmin.Model
 				}
 			}
 
-			SendNotification(NotiConst.ADD_ROLE_RESULT, result);
+			SendNotification(NotiConst.ADD_ROLE, result);
 		}
 
 		// remove a role from the user
@@ -136,7 +139,9 @@ namespace Demo.PureMVC.EmployeeAdmin.Model
 							if (curRole.Equals(role))
 							{
 								userRoles.Remove(role);
-								break;
+
+                                SendNotification(NotiConst.DEL_ROLE, role);
+                                break;
 							}
 						}
 

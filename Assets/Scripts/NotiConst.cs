@@ -13,8 +13,8 @@
     public const string USER_UPDATED = "userUpdated";
     public const string USER_DELETED = "userDeleted";
 
-    public const string ADD_ROLE = "addRole";
-    public const string ADD_ROLE_RESULT = "addRoleResult";
+    public const string ADD_ROLE = "addRoleResult";
+    public const string DEL_ROLE = "deleteRoleResult";
 
     #endregion
 }
